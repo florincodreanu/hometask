@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="app__body">
     <div class="app__header">
-          <input class="search__input" type="text" v-model="searchText" placeholder="type for searching"  />
+          <input class="search__input" type="text"  placeholder="type for searching"
+                 :value='searchText'
+                 @input='evt=>searchText=evt.target.value' />
           <div v-if="totalPhotosFetched>0" class="app__feedback"><span>found:{{totalPhotosFound}}</span><span>fetch:{{totalPhotosFetched}}</span>
           </div>
     </div>
