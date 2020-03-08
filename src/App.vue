@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="app__body">
     <div class="app__header">
-          <input class="search__input" type="text" v-model="searchText" placeholder="type for searching" @input="searchTextIsChangend" />
-          <div v-if="totalPhotosFetched>0" class="app__feedback"><span>found:{{totalPhotosFound}}</span><span>fetched:{{totalPhotosFetched}}</span>
+          <input class="search__input" type="text" v-model="searchText" placeholder="type for searching"  />
+          <div v-if="totalPhotosFetched>0" class="app__feedback"><span>found:{{totalPhotosFound}}</span><span>fetch:{{totalPhotosFetched}}</span>
           </div>
     </div>
 
@@ -37,11 +37,12 @@ export default {
     }
   },
   methods:{
-    searchTextIsChangend:debounce(function(){
+    searchTextIsChanged:debounce(function(){
       this.currentPage=0;
+      this.totalPhotosFound=0;
+      this.totalPhotosFetched=0;
       this.arrayOfImages=[];
       this.loadMorePhotos();
-      //this.$refs.infiniteLoading.stateChanger.reset();
       },500),
     populateArrayOfImages(pimages){
       const vueInst=this;
@@ -53,28 +54,32 @@ export default {
     },
     loadMorePhotos(){
       const vueInst=this;
-      this.busy = true;
-      if(this.searchText.length==0){
-        this.textInfiniteScroll='';
+        vueInst.busy = true;
+      if(vueInst.searchText.length==0){
+          vueInst.textInfiniteScroll='';
       }else{
-        this.textInfiniteScroll='Loading more photos...';
+          vueInst.textInfiniteScroll='Loading more photos...';
         interogateFlickr({searchText:vueInst.searchText,currentPage:vueInst.currentPage,nrPhotosPerPage:vueInst.nrPhotosPerPage})
                 .then(response => response.json())
                 .then(flickrResponse => {
-                  this.busy = false;
-                  this.textInfiniteScroll='';
+                    vueInst.busy = false;
+                    vueInst.textInfiniteScroll='';
                   vueInst.currentPage=(flickrResponse.photos.pages>0 ? flickrResponse.photos.page : 0);
                   vueInst.totalPhotosFound=flickrResponse.photos.total;
                   vueInst.populateArrayOfImages(flickrResponse.photos.photo);
                   if(flickrResponse.stat=='ok'){
                     if(flickrResponse.photos.total<=vueInst.arrayOfImages.length){
-                      this.busy = true;
+                        vueInst.busy = true;
                       vueInst.textInfiniteScroll='No more photos';
                     }
                   }
                   else{
                     this.currentPage=0;
                   }
+                }).catch(err => {
+                    console.log('err=%o',err)
+                    vueInst.arrayOfImages=[];
+                    vueInst.textInfiniteScroll="Error "+err;
                 });
       }
     }
@@ -85,9 +90,10 @@ export default {
         this.textInfiniteScroll = "No photos found.";
         this.totalPhotosFetched=0;
       }
-
-    }
+    },
+      searchText: function(){
+          this.searchTextIsChanged();
+      }
   }
 }
 </script>
-
