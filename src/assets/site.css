@@ -1,0 +1,137 @@
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    img {
+        width: 90%;
+        height: auto;
+        margin: 5px;
+        border: 1px solid #F4F4F4;
+        border-radius: 2%;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    img {
+        width: 90%;
+        height: auto;
+        margin: 5px;
+        border: 1px solid #F4F4F4;
+        border-radius: 2%;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    img {
+        width: auto;
+        height: 30vh;
+        margin: 5px;
+        border: 1px solid #F4F4F4;
+        border-radius: 2%;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    img {
+        width: auto;
+        height: 20vh;
+        margin: 10px;
+        border: 1px solid #F4F4F4;
+        border-radius: 2%;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    img {
+        width: auto;
+        height: 20vh;
+        margin: 10px;
+        border: 1px solid #F4F4F4;
+        border-radius: 2%;
+    }
+}
+
+body{
+    background-color:#F4F4F4;
+    padding: 0px;
+    margin :0px;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+input {
+    outline: none;
+    color:#61696c;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size:1.2rem;
+}
+
+.last--item{
+    position: fixed;
+    right:10px;
+    top:10px;
+}
+
+.card__results{
+    padding: 2px;
+    margin-top: 70px;
+    background-color: #f2f3f7;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+
+.search__input{
+    width:100%;
+    padding: 2px;
+    border: none;
+    margin: 2px;
+    height: 50px;
+}
+.search__input::before {
+    content: "\f4a5";
+    font-size: 1.2rem;
+    font-family: "Ionicons";
+    color: dodgerblue;
+    line-height: 0;
+    display: inline-block;
+    margin: 0 0 0 4px;
+}
+.app__body{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #f2f3f7;
+}
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
+.infinite__scroll{
+    padding: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.app__header{
+    display: flex;
+    position: fixed;
+    top:5px;
+    margin: 0px;
+    padding: 5px;
+    border-radius: 5px;
+    background: #F4F4F4;
+    width: 90vw;
+    box-shadow: 5px 5px 9px #bebebe,
+    -5px -5px 9px #ffffff;
+}
+.app__feedback{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
