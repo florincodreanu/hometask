@@ -12,6 +12,7 @@
     "core-js": "^3.6.4",
     "debounce": "^1.2.0",
     "typeface-nunito-sans": "0.0.72",
+    "v-lazy-image": "^1.4.0",
     "vue": "^2.6.11",
     "vue-infinite-scroll": "^2.0.2"
   },

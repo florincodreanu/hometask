@@ -66,6 +66,18 @@ input {
     font-family: 'Nunito Sans', sans-serif;
     font-size:1.5rem;
 }
+input::placeholder {
+    color: #bebebe;
+}
+.app__body{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #f2f3f7;
+}
 .app__header{
     display: flex;
     position: fixed;
@@ -90,12 +102,12 @@ input {
 }
 .card__results{
     padding: 2px;
-    margin-top: 70px;
+    margin-top: 75px;
     background-color: #f2f3f7;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-
+    overflow-y: auto;
 }
 .search__input{
     width:100%;
@@ -103,15 +115,6 @@ input {
     border: none;
     margin: 2px;
     height: 50px;
-}
-.app__body{
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    background-color: #f2f3f7;
 }
 .break {
     flex-basis: 100%;

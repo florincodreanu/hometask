@@ -8,7 +8,11 @@
             </div>
         </div>
         <div class="card__results">
-            <img v-for="image in arrayOfImages" :key="image.id" v-bind:src="image.url">
+                <v-lazy-image
+                        v-for="image in arrayOfImages" :key="image.id"
+                        v-bind:src="image.url"
+                        src-placeholder="https://cdn-images-1.medium.com/max/80/1*xjGrvQSXvj72W4zD6IWzfg.jpeg"
+                />
             <div class="break"></div>
             <div v-infinite-scroll="loadMorePhotos" infinite-scroll-disabled="busy" infinite-scroll-distance="10"
                  class="infinite__scroll">
@@ -22,6 +26,7 @@
     import debounce from 'debounce';
     import {interogateFlickr} from './modules/flickr';
     import {getFlickrUrl} from './modules/flickr';
+    import {getBrowserWindowDims} from './modules/flickr';
 
     export default {
         name: 'App',
@@ -29,12 +34,13 @@
             return {
                 searchText: '',
                 busy: false,
+                sizeSuffixe:'n',//n for small, z for medium
                 arrayOfImages: [],
                 currentPage: 0,
-                nrPhotosPerPage: 15,
+                nrPhotosPerPage: 20,
                 totalPhotosFound: 0,
                 totalPhotosFetched: 0,
-                textInfiniteScroll: ''
+                textInfiniteScroll: '',
             }
         },
         methods: {
@@ -45,21 +51,22 @@
                 this.arrayOfImages = [];
                 this.loadMorePhotos();
             }, 500),
-            populateArrayOfImages(pimages) {
+            populateArrayAppWithImages(pimages) {
                 const vueInst = this;
                 const photosFlickr = pimages.slice(0, vueInst.nrPhotosPerPage);
                 photosFlickr.forEach(item => {
                     vueInst.totalPhotosFetched++;
-                    vueInst.arrayOfImages.push({url: getFlickrUrl(item), id: vueInst.totalPhotosFetched});
+                    vueInst.arrayOfImages.push({url: getFlickrUrl(item, vueInst.sizeSuffixe), id: vueInst.totalPhotosFetched});
                 })
             },
             loadMorePhotos() {
                 const vueInst = this;
                 vueInst.busy = true;
                 if (vueInst.searchText.length == 0) {
+                    //don't do anything if no input provided
                     vueInst.textInfiniteScroll = '';
                 } else {
-                    vueInst.textInfiniteScroll = 'Loading more photos...';
+                    vueInst.textInfiniteScroll = 'Searching for more photos...';
                     interogateFlickr({
                         searchText: vueInst.searchText,
                         currentPage: vueInst.currentPage,
@@ -71,7 +78,7 @@
                             vueInst.textInfiniteScroll = '';
                             vueInst.currentPage = (flickrResponse.photos.pages > 0 ? flickrResponse.photos.page : 0);
                             vueInst.totalPhotosFound = flickrResponse.photos.total;
-                            vueInst.populateArrayOfImages(flickrResponse.photos.photo);
+                            vueInst.populateArrayAppWithImages(flickrResponse.photos.photo);
                             if (flickrResponse.stat == 'ok') {
                                 if (flickrResponse.photos.total <= vueInst.arrayOfImages.length) {
                                     vueInst.busy = true;
@@ -81,7 +88,6 @@
                                 this.currentPage = 0;
                             }
                         }).catch(err => {
-                        console.log('err=%o', err)
                         vueInst.arrayOfImages = [];
                         vueInst.textInfiniteScroll = "Error " + err;
                     });
@@ -90,7 +96,7 @@
         },
         watch: {
             totalPhotosFound: function (newValTotalPhotosFound) {
-                if (newValTotalPhotosFound == 0 && this.searchText.length > 0) {
+                if (newValTotalPhotosFound == 0 && this.searchText.length > 0 && !this.busy) {
                     this.textInfiniteScroll = "No photos found.";
                     this.totalPhotosFetched = 0;
                 }
@@ -99,5 +105,25 @@
                 this.searchTextIsChanged();
             }
         }
+        ,created() {
+            const {widthBrowserWindow, heightBrowserWindow} =getBrowserWindowDims();
+            if(widthBrowserWindow*heightBrowserWindow < 500000){
+                this.nrPhotosPerPage=20;
+                this.sizeSuffixe='n';
+            }else{
+                this.nrPhotosPerPage=35;
+                this.sizeSuffixe='z';
+            }
+        }
     }
 </script>
+
+<style scoped>
+    .v-lazy-image {
+        filter: blur(10px);
+        transition: filter 0.7s;
+    }
+    .v-lazy-image-loaded {
+        filter: blur(0);
+    }
+</style>
