@@ -7,8 +7,6 @@ export async function interogateFlickr(parmasForFlickrQuery){
 }
 
 export function getFlickrUrl(flickrItem){
-    //const {farm,id,isfamily,isfriend,ispublic,owner,secret,server,title} = flickrItem;
     const {farm,id,secret,server} = flickrItem;
-    console.log('farm=%o,id=%o,secret=%o,server=%o',farm,id,secret,server)
     return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
 }

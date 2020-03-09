@@ -11,10 +11,8 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "debounce": "^1.2.0",
-    "ionicons": "^4.6.3",
     "typeface-nunito-sans": "0.0.72",
     "vue": "^2.6.11",
-    "vue-click-outside": "^1.0.7",
     "vue-infinite-scroll": "^2.0.2"
   },
   "devDependencies": {
