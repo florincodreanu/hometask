@@ -1,6 +1,25 @@
 <template>
     <div id="app" class="app__body">
+
         <div class="app__header">
+            <PopOver v-bind:propsIsVisible="isVisibleSettingsDialog">
+                <BtnRound  slot="reference"  :icon="'ion-ios-heart'" :color="'red'" @click.native="isVisibleSettingsDialog=true"></BtnRound>
+                <template v-slot:header>
+                    <h3>Settings</h3>
+                </template>
+                <template v-slot:content>
+                    <div class="simple__flex--row">
+                        <div class="simple__flex--column">
+                            <i class="ion-ios-square" style="font-size:5em;" @click="setPhotosDisplayStyle('simpleMode')"></i>
+                            <p>fewer photos on screen</p>
+                        </div>
+                        <div class="simple__flex--column">
+                            <i class="ion-ios-grid" style="font-size:5em;" @click="setPhotosDisplayStyle('condensedMode')"></i>
+                            <p>more photos on screen</p>
+                        </div>
+                    </div>
+                </template>
+            </PopOver>
             <input class="search__input" type="text" placeholder="type for searching"
                    :value='searchText'
                    @input='evt=>searchText=evt.target.value'/>
@@ -23,6 +42,8 @@
 </template>
 
 <script>
+    import BtnRound from './components/BtnRound.vue';
+    import PopOver from './components/PopOver.vue';
     import debounce from 'debounce';
     import {interogateFlickr} from './modules/flickr';
     import {getFlickrUrl} from './modules/flickr';
@@ -30,10 +51,14 @@
 
     export default {
         name: 'App',
+        components:{
+            BtnRound, PopOver
+        },
         data: function () {
             return {
                 searchText: '',
                 busy: false,
+                isVisibleSettingsDialog:false,
                 sizeSuffixe:'n',//n for small, z for medium
                 arrayOfImages: [],
                 currentPage: 0,
@@ -51,12 +76,47 @@
                 this.arrayOfImages = [];
                 this.loadMorePhotos();
             }, 500),
+            setPhotosDisplayStyle(simpleMode_or_condensedMode){
+                switch (simpleMode_or_condensedMode) {
+                    case 'simpleMode':
+                        if(this.nrPhotosPerPage<=20){
+                            document.documentElement.style.setProperty('--width-result-img', '90%');
+                            document.documentElement.style.setProperty('--height-result-img', 'auto');
+                        }else{
+                            document.documentElement.style.setProperty('--width-result-img', 'auto');
+                            document.documentElement.style.setProperty('--height-result-img', '30vh');
+                        }
+                        this.isVisibleSettingsDialog=false;
+                        break;
+                    case 'condensedMode':
+                        if(this.nrPhotosPerPage<=20){
+                            document.documentElement.style.setProperty('--width-result-img', 'auto');
+                            document.documentElement.style.setProperty('--height-result-img', '25vh');
+                        }else{
+                            document.documentElement.style.setProperty('--width-result-img', 'auto');
+                            document.documentElement.style.setProperty('--height-result-img', '20vh');
+                        }
+                        this.isVisibleSettingsDialog=false;
+                        break;
+                }
+            },
             populateArrayAppWithImages(pimages) {
                 const vueInst = this;
                 const photosFlickr = pimages.slice(0, vueInst.nrPhotosPerPage);
                 photosFlickr.forEach(item => {
+                    /** Example of one item
+                     id: "49658325618"
+                     owner: "28232089@N04"
+                     secret: "2349ba00a6"
+                     server: "65535"
+                     farm: 66
+                     title: "Baker-Polito Administration launches COVID-19 Response Command Center"
+                     ispublic: 1
+                     isfriend: 0
+                     isfamily: 0
+                     */
                     vueInst.totalPhotosFetched++;
-                    vueInst.arrayOfImages.push({url: getFlickrUrl(item, vueInst.sizeSuffixe), id: vueInst.totalPhotosFetched});
+                    vueInst.arrayOfImages.push({url: getFlickrUrl(item, vueInst.sizeSuffixe), id: vueInst.totalPhotosFetched,title:item.title});
                 })
             },
             loadMorePhotos() {

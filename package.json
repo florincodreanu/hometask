@@ -14,7 +14,9 @@
     "typeface-nunito-sans": "0.0.72",
     "v-lazy-image": "^1.4.0",
     "vue": "^2.6.11",
-    "vue-infinite-scroll": "^2.0.2"
+    "vue-click-outside": "^1.0.7",
+    "vue-infinite-scroll": "^2.0.2",
+    "vue2-touch-events": "^2.2.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
